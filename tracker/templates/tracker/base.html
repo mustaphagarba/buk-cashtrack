@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Squirrel</title>
+    {% load staticfiles %}
+    <!--{% load bootstrap3 %}-->
+
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!--{% bootstrap_javascript %}-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="{% static 'main.js' %}"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Pen+Script" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+
+
+    <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+
+</head>
+<body>
+<header id="header" class="page-topbar">
+ <div class="navbar-fixed">
+    <nav class="navbar">
+      <div class="nav-wrapper">
+        <a class="navbar-brand" href="{% url 'tracker:expense' %}">Squirrel</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {% if user.is_authenticated %}
+              <li>
+                    <a href="{% url 'tracker:dashboard' %}">
+                        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>&nbsp; Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'tracker:expense' %}">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&nbsp; Expense Overview
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'tracker:create_expense' %}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Expense
+                    </a>
+                </li>
+                <li><a href="{% url 'profile'%}">{{ user.get_username }}</a></li>
+                <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+              {% else %}
+                     <li><a href="{% url 'login'%}?next={{request.path}}">Register</a></li>
+                     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+                {% endif %}
+          </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+    {% block body %}
+    {% endblock %}
+
+</body>
+</html>

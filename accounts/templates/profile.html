@@ -1,0 +1,42 @@
+
+{% include 'tracker/base.html' %}
+
+{% block body %}
+
+
+<div class="container">
+    <div class="row profile">
+		<div class="col s12 m3">
+		  <div class="card">
+			<div class="card-image">
+			  {% if profile.avatar != ''%}
+				<img alt="" src={{profile.avatar}} >
+			{% else %}
+			<!--TODO: Use Default avatar -->
+				<img alt="" src="https://dummyimage.com/600x400/000/fff" >
+			{% endif%}
+			  <span class="card-title">{{profile.user}}</span>
+			</div>
+			<div class="collection">
+					<a href="#" class="collection-item">Update Profile</a>
+					<a href="#" class="collection-item">
+						<i class="fa fa-bar-chart-o"></i> Settings</span>
+					</a>
+				  </div>
+		  </div>
+		</div>
+		
+		<div class="col m9">
+            <div class="profile-content">
+			   <!--TODO-->
+            </div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+{%endblock%}

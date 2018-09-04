@@ -1,0 +1,327 @@
+{% extends 'tracker/base.html'%}
+
+{% block body %}
+<div class="dashboard">
+    {% if context_type == 'dashboard'%}
+    <section>
+        <div class="row">
+            <div class="col s12 m6 l3">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="card-stats-title">
+                            Total Records</p>
+                        <h4 class="card-stats-number">{{total_records}}</h4>
+                        <p class="card-stats-compare">
+                            {% if total_expenses_diff > 0 %}
+                            <i class="material-icons">keyboard_arrow_up</i> {{total_records_diff | stringformat:"+d" | slice:"1:"}}%
+                            {% endif %}
+                            {% if total_expenses_diff < 0 %}
+                            <i class="material-icons">keyboard_arrow_down</i> {{total_records_diff | stringformat:"+d" | slice:"1:"}}%
+                            {% endif %}
+                            <span class="">from last month</span>
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <div class="this-month col m6">This month:</div>
+                        <div>{{totalRecordsInThisMonth}}</div>
+                        <div class="last-month col m6">Last month:</div>
+                        <div>{{totalRecordsInLastMonth}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l3">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="card-stats-title">
+                            Total Expenses</p>
+                        <h4 class="card-stats-number">${{total_expenses}}</h4>
+                        <p class="card-stats-compare">
+                            {% if total_expenses_diff > 0 %}
+                            <i class="material-icons">keyboard_arrow_up</i> {{total_expenses_diff | stringformat:"+d" | slice:"1:"}}%
+                            {% endif %}
+                            {% if total_expenses_diff < 0 %}
+                            <i class="material-icons">keyboard_arrow_down</i> {{total_expenses_diff | stringformat:"+d" | slice:"1:"}}%
+                            {% endif %}
+                            <span class="">from last month</span>
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <div class="this-month col m6">This month:</div>
+                        <div>${{totalExpensesInThisMonth}}</div>
+                        <div class="last-month col m6">Last month:</div>
+                        <div>${{totalExpensesInLastMonth}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l3">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="card-stats-title">
+                            Total Categories</p>
+                        <h4 class="card-stats-number">{{categories_cnt}}</h4>
+                        <p class="card-stats-compare">
+                            {% if total_expenses_diff > 0 %}
+                            <i class="material-icons">keyboard_arrow_up</i> {{total_categories_diff | stringformat:"+d" | slice:"1:"}}%
+                            {% endif %}
+                            {% if total_expenses_diff < 0 %}
+                            <i class="material-icons">keyboard_arrow_down</i> {{total_categories_diff | stringformat:"+d" | slice:"1:"}}%
+                            {% endif %}
+                             <span class="">from last month</span>
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <div class="this-month col m6">This month:</div>
+                        <div>{{categories_in_this_month}}</div>
+                        <div class="last-month col m6">Last month:</div>
+                        <div>{{categories_in_last_month}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l3">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="card-stats-title">
+                            Avg. year</p>
+                        <h4 class="card-stats-number">${{avg_year}}</h4>
+                        <p class="card-stats-compare">
+                            <i class="material-icons">dashboard</i>
+                            <span class=""> </span>
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        <div class="this-month col m6">Avg. month:</div>
+                        <div>${{avg_month}}</div>
+                        <div class="last-month col m6">Avg. day:</div>
+                        <div>${{avg_day}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if categories %}
+    <section class="chart-dashboard">
+        <div class="row">
+            <div class="col s12 m6 7">
+                <div class="card">
+                    <div class="card-move-up waves-effect waves-block waves-light">
+                        <div class="move-up">
+                            <div>
+                                <canvas id="allCategories" class="allCategories"></canvas>
+                                <script>
+                                var ctx = document.getElementById("allCategories").getContext('2d');
+                                var allCategories = new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        "labels": {{ categories | safe }},
+                                            "datasets":[
+                                             {
+                                                "data": {{ categories_record_cnt | safe }},
+                                                  backgroundColor: {{categories_color_arr| safe }}
+                                             }
+                                      ]
+                                    },
+
+                                    options: {
+                                        legend: {
+                                             labels: {
+                                                  fontColor: "#e5ffff"
+                                                 }
+                                              },
+                                            title: {
+                                                display: true,
+                                                fontColor: "#e5ffff",
+                                                text: 'Categories'
+                                            }
+                                    }
+                                });
+
+
+                                </script>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col s12 m6 7">
+                <div class="card">
+                    <div class="card-move-up">
+                        <div class="move-up card-content ">
+                            <p class="margin">Expenses per Categories</p>
+                            <canvas id="allCategoriesRadar" class="allCategoriesRadar"></canvas>
+                            <script>
+                                var ctx = document.getElementById("allCategoriesRadar").getContext('2d');
+                                var allCategories = new Chart(ctx, {
+                                    type: 'horizontalBar',
+                                    data: {
+                                        "labels": {{ categories | safe }},
+                                         "datasets":[
+                                             {
+                                                "data": {{ categories_expense | safe }},
+                                                "fill": true,
+                                                 "backgroundColor": "#fff",
+                                                "borderColor": "#fff;",
+                                             }
+                                      ]
+                                    },
+                                    options: {
+                                    legend: {
+                                        display: false
+                                    },
+                                    responsive: true,
+                                    tooltips: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    },
+                                    hover: {
+                                        mode: 'nearest',
+                                        intersect: true
+                                    }
+                                    ,
+                                    scales: {
+                                        xAxes: [{
+                                            display: true,
+                                            scaleLabel: {
+                                                display: true,
+                                                labelString: "Amount",
+                                                 fontColor: "#e5ffff",
+                                            },
+                                            ticks: {
+                                              fontColor: "#fff",
+                                            },
+                                        }],
+                                        yAxes: [{
+                                        stacked: true,
+                                            display: true,
+                                            scaleLabel: {
+                                                display: true,
+                                                labelString: 'Categories',
+                                                 fontColor: "#e5ffff",
+                                            },
+                                            ticks: {
+                                              fontColor: "#fff",
+                                            },
+                                        }]
+                                    }
+                                }
+                                });
+
+
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+
+    {% if latest30DaysData %}
+    <section>
+        <div class="row">
+            <div class="col m12">
+                <div class="card">
+                    <div class="card-move-up ">
+                                        <canvas id="latest30DaysExpense" class="latest30DaysExpense" width="500" height="100"></canvas>
+                <script>
+                                var ctx = document.getElementById("latest30DaysExpense").getContext('2d');
+                                var latest30daysRecords = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        "labels": {{ latest30DaysLabel | safe }},
+                                      "datasets":[
+                                         {
+                                            "label":"Amount",
+                                            "data": {{ latest30DaysData | safe }},
+                                            "fill":false,
+                                            "borderColor":"#e5ffff",
+                                            "lineTension":0.1
+                                         }
+                                      ]
+                                    },
+                                    options: {
+                                        legend: {
+                                             labels: {
+                                                  fontColor: "#e5ffff"
+                                                 }
+                                              },
+                                            title: {
+                                                display: true,
+                                                fontColor: "#e5ffff",
+                                                text: 'Expenses in Last 30 Days'
+                                            }     ,
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true,
+                                                        fontColor: "#e5ffff"
+                                                    },
+                                                }],
+                                              xAxes: [{
+                                                    ticks: {
+                                                        fontColor: "#e5ffff"
+                                                    },
+                                                }]
+                                        }
+
+                                    }
+                                });
+
+
+                </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section>
+        <div class="row">
+        <div class="col s12 m4">
+          <div class="card  border-radius-3">
+            <div class="card-content center">
+              <a href="{% url 'tracker:analytics'%}/{{current_year}}">
+                    <div class="dashboard-card annually-report">
+                        <div class="">Annually Report</div>
+                    </div>
+                </a>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="card  border-radius-3">
+            <div class="card-content center">
+             <a href="{% url 'tracker:analytics'%}/{{current_year}}/{{current_month}}">
+                    <div class="dashboard-card monthly-report">
+                        <div class="">Monthly Report</div>
+                    </div>
+                </a>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="card gradient-45deg-light-blue-cyan border-radius-3">
+            <div class="card-content center">
+             <a href="{% url 'tracker:analytics'%}/{{current_year}}/{{current_month}}/{{current_day}}">
+                    <div class="dashboard-card daily-report">
+                        <div class="">Daily Report</div>
+                    </div>
+                </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+</div>
+
+{% endblock %}
+</div>

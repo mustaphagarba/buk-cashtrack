@@ -1,0 +1,106 @@
+{% extends 'tracker/base.html'%}
+
+{% load month_labels %}
+{% block body %}
+
+    <div class="expense-analytics">
+        {% if menu_labels %}
+        <div class="analysis-menu">
+            <ul class="collection">
+                {% for label in menu_labels %}
+                  <li class="collection-item">
+                      {% if context_type == 'annually' %}
+                        <a class="annually" href="{% url 'tracker:analytics'%}/{{label}}"> {{label}}</a>
+                      {% elif context_type == 'monthly'%}
+
+                        <a class="annually" href="{% url 'tracker:analytics'%}/{{selected_year}}/{{label}}"> {{months|get_by_index:label}}</a>
+                      {% endif %}
+                  </li>
+                {% endfor%}
+                </ul>
+        </div>
+        {% endif %}
+
+        {% if context_type == 'annually' or context_type == 'monthly' or context_type == 'daily' %}
+            <div class="row">
+
+                {% if submenu %}
+                <div class="col s4 m2 sidebar">
+                     <div class="collection">
+                        <a href="#" class="collection-item active">{{x_axis_label}}</a>
+                         {% for label, amount in submenu %}
+                            <a href="#" class="collection-item">
+                                <i class="fa fa-bar-chart-o"></i> {{label}} <span class="badge">{{amount}}</span>
+                            </a>
+                        {% endfor %}
+                      </div>
+                </div>
+                {% endif %}
+                <div class="col m10">
+                    {% if datasets %}
+                        <canvas id="myChart" height="150"></canvas>
+                        {% load django_tables2 %}
+                        {%if expense_table_in_month_view%}
+                            {% render_table expense_table_in_month_view%}
+                        {%endif%}
+                        {%if expense_table_in_daily_view %}
+                            {% render_table expense_table_in_daily_view%}
+                        {%endif%}
+                        <script>
+                            var ctx = document.getElementById("myChart").getContext('2d');
+                            var isShowScales = {% if report_type != 'pie' %}true{% else %}false {% endif %};
+                            var xAxisLabel = '{{x_axis_label}}';
+                            var dataset;
+                            var myChart = new Chart(ctx, {
+                                type: '{{report_type}}',
+                                data: {
+                                    labels: {{ labels | safe }},
+                                    datasets: {{ datasets | safe}}
+                                },
+                                options: {
+                                    responsive: true,
+                                    title: {
+                                        display: true,
+                                        text: '{{ title }}'
+                                    },
+                                    tooltips: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    },
+                                    hover: {
+                                        mode: 'nearest',
+                                        intersect: true
+                                    }
+                                    ,
+                                    scales: {
+                                        xAxes: [{
+                                            display: isShowScales,
+                                            scaleLabel: {
+                                                display: isShowScales,
+                                                labelString: xAxisLabel
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            display: isShowScales,
+                                            scaleLabel: {
+                                                display: isShowScales,
+                                                labelString: 'Amount'
+                                            }
+                                        }]
+                                    }
+                                }
+                            });
+                        </script>
+                    {% else %}
+                        No data
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+    </div>
+
+
+
+    {% endblock %}
+
+

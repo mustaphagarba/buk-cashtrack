@@ -1,0 +1,35 @@
+{% extends 'tracker/base.html'%}
+{% load django_tables2 crispy_forms_tags %}
+
+{% block body %}
+<div class="container expense-overview">
+    <div class="row">
+         <div class="col">
+            <button type="submit" class="open-filter-btn btn btn-success">
+              Filter
+            </button>
+         </div>
+        <div class="col">
+            <form method="GET" action="/tracker/export">
+                <button type="submit" class="export-btn btn btn-success">Export</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="row">
+       <div class="col m12">
+           {% render_table table %}
+       </div>
+    </div>
+
+
+    <div id="filterPanel" class="filterPanel">
+      <a href="javascript:void(0)" class="closebtn">&times;</a>
+          <form action="" method="get">
+        {% crispy filter.form filter.form.helper %}
+        </form>
+    </div>
+
+{% endblock %}
+</div>
