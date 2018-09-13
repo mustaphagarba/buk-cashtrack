@@ -18,3 +18,6 @@ class Expense(models.Model):
 
     def get_absolute_url(self):
         return reverse('tracker:expense')
+
+    def __str__(self):
+        return self.date

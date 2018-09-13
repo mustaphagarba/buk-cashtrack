@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'crispy_forms',
     'tracker.templatetags.month_labels',
+    'django_extensions',
     'social_django'
 ]
 
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Lagos'
 
 USE_I18N = True
 
